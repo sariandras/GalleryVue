@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <BigPicture v-if="isSelected" :imgUrl="selectedUrl"/>
+    <BigPicture v-if="isSelected" @incrementId="asd($event)" :imgUrl="selectedUrl" :maxId="Ids.length"/>
 </template>
 
 <script setup>
@@ -23,6 +23,7 @@ import { onMounted, ref } from 'vue';
 import BigPicture from '../components/BigPicture.vue'
 
 const route = useRoute();
+
 
 let page = Number(route.params.page);
 const pages = ref([]);
@@ -65,6 +66,21 @@ function removeBlur(){
     if (clickCounter%2==0) {
         isSelected.value=false
         
+    }
+}
+
+function asd(doIncrement){
+    let id = selectedUrl.value.split('/')[4];
+    let index = Ids.value.findIndex((identity)=>identity==id)
+    if (doIncrement) {
+        selectedUrl.value = 'https://images.pexels.com/photos/'+Ids.value[index+1]+'/pexels-photo-'+Ids.value[index+1]+'.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb'
+    }else{
+        if (Ids.value[index]>0) {
+            selectedUrl.value = 'https://images.pexels.com/photos/'+Ids.value[index-1]+'/pexels-photo-'+Ids.value[index-1]+'.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb'
+        }
+        else{
+            selectedUrl.value = 'https://images.pexels.com/photos/'+Ids.value[Ids.value.length-1]+'/pexels-photo-'+Ids.value[Ids.value.length-1]+'.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb'
+        }
     }
 }
 
